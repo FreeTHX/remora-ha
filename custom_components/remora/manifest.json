@@ -1,0 +1,9 @@
+{
+    "domain": "remora",
+    "name": "Remora - Gestionnaire Fil Pilot",
+    "documentation": "https://www.home-assistant.io/components/remora",
+    "dependencies": [],
+    "codeowners": ["@FreeTHX"],
+    "requirements": ["pyremora"]
+  }
+  
