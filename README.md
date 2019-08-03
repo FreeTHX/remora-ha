@@ -64,4 +64,4 @@ climate:
 ```
 
 ## Demo
-``![Remora in HA](https://user-images.githubusercontent.com/16355105/62412432-ec6fb380-b5f1-11e9-814e-5531982f9b72.png)``
+![Remora in HA](https://user-images.githubusercontent.com/16355105/62412432-ec6fb380-b5f1-11e9-814e-5531982f9b72.png)
