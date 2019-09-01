@@ -58,7 +58,8 @@ class RemoraDevice:
         self._remora = remora.RemoraDevice(self._host)
         self._teleInfo = None
         self._filPiloteDic = None
-
+        self._relais = None
+        
     @property
     def TeleInfo(self):
         """Get latest update if throttle allows. Return TeleInfo."""
@@ -92,3 +93,26 @@ class RemoraDevice:
     def updateAllFilPilote(self, **kwargs):
         """Fetch the latest status for FilPilote"""
         self._filPiloteDic = self._get_AllFilPilote()
+
+
+    @property
+    def RelaisDic(self):
+        """Get latest update if throttle allows.
+           Return the current Mode Relais"""
+        self.updateRelais()
+        return self._relais
+
+    def _set_ModeRelais(self, rMode):
+        return self._remora.setFnctRelais(rMode)
+    
+    def _set_EtatRelais(self, rEtat):
+        return self._remora.setRelais(rEtat)
+
+    def _get_Relais(self):
+        """Get the status from Remora Relais"""
+        return self._remora.getRelais()
+
+    @Throttle(MIN_TIME_BETWEEN_UPDATES_REMORA_CLIMATE)
+    def updateRelais(self, **kwargs):
+        """Fetch the latest status for Relais"""
+        self._relais = self._get_Relais()

@@ -17,6 +17,8 @@ This component provides:
 - ```sensor``` over TeleInfo  
 A sensor for each ***TeleInfo*** header can be configured to fetch ***TeleInfo*** value.  
 See ```SENSOR_TYPES``` in ```sensor.py``` to get the list of supported headers.
+- ```climate``` to manage water heater via ***Relais***  
+Use it to switch on/off the heater and set the preset mode.  
 - ```climate``` to manage heater via ***Fil Pilote***  
 Setup a climate entity for each ***Fil Pilote***.  
 
@@ -61,7 +63,8 @@ climate:
       - fp: 3
       - fp: 4
       - fp: 5
+    relais: True
 ```
 
 ## Demo
-``![Remora in HA](https://user-images.githubusercontent.com/16355105/62412432-ec6fb380-b5f1-11e9-814e-5531982f9b72.png)``
+![Remora in HA](https://user-images.githubusercontent.com/16355105/62412432-ec6fb380-b5f1-11e9-814e-5531982f9b72.png)
