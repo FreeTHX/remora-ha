@@ -39,7 +39,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 
 CLIMATE_PREFIX = 'Remora.'
 
-def setup_platform(hass, config, add_devices, discovery_info=None):
+async def async_setup_platform(hass, config, async_add_devices, discovery_info=None):
     """Setup the Remora FilPilote and Relais platform."""
     entities = []
     if FILPILOTE in config:
@@ -55,7 +55,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     if config[RELAIS]:
         entities.append(RemoraRelaisClimate(hass.data[DOMAIN]))
 
-    add_devices(entities, True)
+    async_add_devices(entities, True)
  
 
 class RemoraFilPiloteClimate(ClimateDevice):
@@ -106,17 +106,18 @@ class RemoraFilPiloteClimate(ClimateDevice):
         """Return the list of supported features."""
         return SUPPORT_PRESET_MODE
 
-    def set_hvac_mode(self, hvac_mode):
+    async def async_set_hvac_mode(self, hvac_mode):
         """Set new target hvac mode."""
         fpmode = self.preset_modes[self.hvac_modes.index(hvac_mode)]
-        self.set_preset_mode(fpmode)
+        await self.async_set_preset_mode(fpmode)
 
-    def set_preset_mode(self, preset_mode):
-        self._remora._set_FilPilote(self._fpnum, remora.FpMode[preset_mode])
+    async def async_set_preset_mode(self, preset_mode):
+        await self.hass.async_add_executor_job( self._remora._set_FilPilote, self._fpnum, remora.FpMode[preset_mode])    
+        #self._remora._set_FilPilote(self._fpnum, remora.FpMode[preset_mode])
         self._preset_mode = preset_mode
-        self.schedule_update_ha_state(True)
+        self.async_schedule_update_ha_state(True)
         
-    def update(self):
+    async def async_update(self):
         self._preset_mode = self._remora.FilPiloteDic[self._fp].name
 
 
@@ -168,17 +169,19 @@ class RemoraRelaisClimate(ClimateDevice):
         """Return the list of supported features."""
         return SUPPORT_PRESET_MODE
 
-    def set_hvac_mode(self, hvac_mode):
+    async def async_set_hvac_mode(self, hvac_mode):
         eMode = [key for (key, value) in REMORA_RELAIS_ETAT_TO_HVAC_MODE.items()             if value == hvac_mode][0]
-        self._remora._set_EtatRelais(remora.RelaisEtat[eMode])
+        await self.hass.async_add_executor_job( self._remora._set_EtatRelais, remora.RelaisEtat[eMode])
+        #self._remora._set_EtatRelais(remora.RelaisEtat[eMode])
         self._relais_etat = eMode
-        self.schedule_update_ha_state(True)
+        self.async_schedule_update_ha_state(True)
 
-    def set_preset_mode(self, preset_mode):
-        self._remora._set_ModeRelais(remora.RelaisMode[preset_mode])
+    async def async_set_preset_mode(self, preset_mode):
+        await self.hass.async_add_executor_job( self._remora._set_ModeRelais, remora.RelaisMode[preset_mode])
+        #self._remora._set_ModeRelais(remora.RelaisMode[preset_mode])
         self._preset_mode = preset_mode
-        self.schedule_update_ha_state(True)
+        self.async_schedule_update_ha_state(True)
         
-    def update(self):
+    async def async_update(self):
         self._relais_etat = self._remora.RelaisDic[RELAIS].name
         self._relais_mode = self._remora.RelaisDic[FNCT_RELAIS].name
