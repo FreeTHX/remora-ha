@@ -1,6 +1,6 @@
 """Support for Remora TeleInfo sensor."""
 import logging
-
+import asyncio
 import voluptuous as vol
 from homeassistant.helpers.entity import Entity
 from homeassistant.components.sensor import (PLATFORM_SCHEMA)
@@ -68,7 +68,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 
-def setup_platform(hass, config, add_entities, discovery_info=None):
+async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     """Set up the Remora TeleInfo sensors."""
     entities = []
     for resource in config[CONF_RESOURCES]:
@@ -82,7 +82,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
 
         entities.append(RemoraTeleInfoSensor(hass.data[DOMAIN], sensor_type))
 
-    add_entities(entities, True)
+    async_add_entities(entities, True)
 
 
 class RemoraTeleInfoSensor(Entity):
@@ -118,7 +118,7 @@ class RemoraTeleInfoSensor(Entity):
             return ''
         return self._unit
 
-    def update(self):
+    async def async_update(self):
         """Get the latest status and use it to update our sensor state."""
         if self.type.upper() not in self._remora.TeleInfo:
             self._state = None

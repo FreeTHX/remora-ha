@@ -57,8 +57,10 @@ climate:
     filpilote:
       # List of FilPilote index you want to manage
       # name is optional to set a friendly_name 
+      # temp_sensor is optional for temperature sensor display
       - fp: 1
         name: 'Kitchen'
+        temp_sensor: 'sensor.temperature_158d000XXXXXXX'
       - fp: 2
       - fp: 3
       - fp: 4

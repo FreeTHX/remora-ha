@@ -22,7 +22,7 @@ CONFIG_SCHEMA = vol.Schema({
 }, extra=vol.ALLOW_EXTRA)
 
 
-def setup(hass, config):
+async def async_setup(hass, config):
     """Set up the Remora devices."""
     if DOMAIN not in config:
         return True
@@ -35,10 +35,11 @@ def setup(hass, config):
     host = conf[CONF_HOST]
     remora = RemoraDevice(host)
     hass.data[DOMAIN] = remora
-    # It doesn't really matter why we're not able to get the status, just that
-    # we can't.
+    # It doesn't really matter why we're not able to get the status,
+    # just that we can't.
     try:
-        remora.updateTeleInfo(no_throttle=True)
+        await hass.async_add_executor_job( remora.updateTeleInfo )
+        # must add keyword param no_throttle=True
     except Exception:  # pylint: disable=broad-except
         _LOGGER.exception("Failure while testing Remora TeleInfo retrieval.")
         return False
