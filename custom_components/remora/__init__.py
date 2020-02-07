@@ -5,6 +5,7 @@ import logging
 import voluptuous as vol
 
 from homeassistant.const import (CONF_HOST, CONF_SENSORS)
+from .const import (SERVICE_RESET)
 import homeassistant.helpers.config_validation as cv
 from datetime import timedelta
 from homeassistant.util import Throttle
@@ -20,6 +21,8 @@ CONFIG_SCHEMA = vol.Schema({
         vol.Required(CONF_HOST): cv.string
     })
 }, extra=vol.ALLOW_EXTRA)
+
+RESET_SCHEMA = vol.Schema({})
 
 
 async def async_setup(hass, config):
@@ -43,6 +46,14 @@ async def async_setup(hass, config):
     except Exception:  # pylint: disable=broad-except
         _LOGGER.exception("Failure while testing Remora TeleInfo retrieval.")
         return False
+
+    def async_reset(service):
+        hass.data[DOMAIN].reset()
+
+    hass.services.async_register(DOMAIN, SERVICE_RESET, async_reset,
+                                 RESET_SCHEMA)
+
+
     return True
 
 
@@ -60,7 +71,12 @@ class RemoraDevice:
         self._teleInfo = None
         self._filPiloteDic = None
         self._relais = None
-        
+
+    def reset(self):
+        """Reset remora."""
+        self._remora.reset()
+        return True
+
     @property
     def TeleInfo(self):
         """Get latest update if throttle allows. Return TeleInfo."""
