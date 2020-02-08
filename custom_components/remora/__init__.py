@@ -1,15 +1,14 @@
 """Support for the Remora devices."""
-from .const import DOMAIN, DATA_REMORA_HOST
-
 import logging
+from datetime import timedelta
+
 import voluptuous as vol
 
-from homeassistant.const import (CONF_HOST, CONF_SENSORS)
-from .const import (SERVICE_RESET)
 import homeassistant.helpers.config_validation as cv
-from datetime import timedelta
+from homeassistant.const import CONF_HOST, CONF_SENSORS
 from homeassistant.util import Throttle
 
+from .const import DATA_REMORA_HOST, DOMAIN, SERVICE_RESET
 
 _LOGGER = logging.getLogger(__name__)
 MIN_TIME_BETWEEN_UPDATES_REMORA_SENSOR = timedelta(seconds=5)

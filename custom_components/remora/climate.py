@@ -1,24 +1,20 @@
 import logging
-import voluptuous as vol
-from homeassistant.core import callback
-import homeassistant.helpers.config_validation as cv
-from homeassistant.helpers.event import async_track_state_change
-from homeassistant.components.climate import (ClimateDevice,
-                                              PLATFORM_SCHEMA)
-from homeassistant.components.climate.const import (SUPPORT_PRESET_MODE,
-                                                    HVAC_MODE_OFF,
-                                                    HVAC_MODE_HEAT,
-                                                    HVAC_MODE_HEAT_COOL,HVAC_MODE_COOL)
 
-from .const import (FILPILOTE,
-                    FP,
-                    RELAIS,
-                    FNCT_RELAIS,
-                    DOMAIN,
-                    CONF_TEMP_SENSOR)
-from homeassistant.const import (TEMP_CELSIUS, CONF_NAME)
 import remora
+import voluptuous as vol
 
+import homeassistant.helpers.config_validation as cv
+from homeassistant.components.climate import PLATFORM_SCHEMA, ClimateDevice
+from homeassistant.components.climate.const import (HVAC_MODE_COOL,
+                                                    HVAC_MODE_HEAT,
+                                                    HVAC_MODE_HEAT_COOL,
+                                                    HVAC_MODE_OFF,
+                                                    SUPPORT_PRESET_MODE)
+from homeassistant.const import CONF_NAME, TEMP_CELSIUS
+from homeassistant.core import callback
+from homeassistant.helpers.event import async_track_state_change
+
+from .const import CONF_TEMP_SENSOR, DOMAIN, FILPILOTE, FNCT_RELAIS, FP, RELAIS
 
 _LOGGER = logging.getLogger(__name__)
 

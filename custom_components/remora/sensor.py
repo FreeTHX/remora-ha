@@ -1,12 +1,15 @@
 """Support for Remora TeleInfo sensor."""
-import logging
 import asyncio
+import logging
+
 import voluptuous as vol
-from homeassistant.helpers.entity import Entity
-from homeassistant.components.sensor import (PLATFORM_SCHEMA)
+
 import homeassistant.helpers.config_validation as cv
-from homeassistant.const import (ATTR_SECONDS, ENERGY_WATT_HOUR,
-                                 CONF_RESOURCES, POWER_WATT)
+from homeassistant.components.sensor import PLATFORM_SCHEMA
+from homeassistant.const import (ATTR_SECONDS, CONF_RESOURCES,
+                                 ENERGY_WATT_HOUR, POWER_WATT)
+from homeassistant.helpers.entity import Entity
+
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
