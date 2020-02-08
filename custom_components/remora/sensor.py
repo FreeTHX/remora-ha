@@ -6,69 +6,80 @@ import voluptuous as vol
 
 import homeassistant.helpers.config_validation as cv
 from homeassistant.components.sensor import PLATFORM_SCHEMA
-from homeassistant.const import (ATTR_SECONDS, CONF_RESOURCES,
-                                 ENERGY_WATT_HOUR, POWER_WATT)
+from homeassistant.const import (
+    ATTR_SECONDS,
+    CONF_RESOURCES,
+    ENERGY_WATT_HOUR,
+    POWER_WATT,
+)
 from homeassistant.helpers.entity import Entity
 
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
-SENSOR_PREFIX = 'Remora.'
+SENSOR_PREFIX = "Remora."
 SENSOR_TYPES = {
-    '_UPTIME':
-    ['Uptime', ATTR_SECONDS, 'mdi:history'],
-    'ADCO':
-    ['Adresse du compteur', '', 'mdi:counter'],
-    'OPTARIF':
-    ['Option tarifaire choisie', '', 'mdi:mdi-timer-sand'],
-    'ISOUSC':
-    ['Intensité souscrite', 'A', 'mdi:mdi-flash-outline'],
-    'BASE':
-    ['Index option Base', ENERGY_WATT_HOUR, 'mdi:gauge'],
-    'HCHC':
-    ['Index option Heures Creuses', ENERGY_WATT_HOUR, 'mdi:gauge'],
-    'HCHP':
-    ['Index option Heures Pleines', ENERGY_WATT_HOUR, 'mdi:gauge'],
-    'EJPHN':
-    ['Index option Heures Normales', ENERGY_WATT_HOUR, 'mdi:gauge'],
-    'EJPHPM':
-    ['Index option Heures de Pointe Mobile', ENERGY_WATT_HOUR, 'mdi:gauge'],
-    'BBRHCJB':
-    ['Index option Heures Creuses Jours Bleus', ENERGY_WATT_HOUR, 'mdi:gauge'],
-    'BBRHPJB':
-    ['Index option Heures Pleines Jours Bleus', ENERGY_WATT_HOUR, 'mdi:gauge'],
-    'BBRHCJW':
-    ['Index option Heures Creuses Jours Blancs', ENERGY_WATT_HOUR, 'mdi:gauge'],
-    'BBRHPJW':
-    ['Index option Heures Pleines Jours Blancs', ENERGY_WATT_HOUR, 'mdi:gauge'],
-    'BBRHCJR':
-    ['Index option Heures Creuses Jours Rouges', ENERGY_WATT_HOUR, 'mdi:gauge'],
-    'BBRHPJR':
-    ['Index option Heures Pleines Jours Rouges', ENERGY_WATT_HOUR, 'mdi:gauge'],
-    'PEJP':
-    ['Préavis Début EJP (30 min)', 'min', 'mdi:counter'],
-    'PTEC':
-    ['Période Tarifaire en cours', '', 'mdi:chart-timeline'],
-    'DEMAIN':
-    ['Couleur du lendemain ', '', 'mdi:counter'],
-    'IINST':
-    ['Intensité instantanée', 'A', 'mdi:flash'],
-    'ADPS':
-    ['Avertissement de Dépassement De Puissance Souscrite', 'A',
-     'mdi:mdi-flash-red-eye'],
-    'IMAX':
-    ['Intensité maximale', 'A', 'mdi:mdi-flash-red-eye'],
-    'PAPP':
-    ['Puissance apparente', 'VA', 'mdi:flash'],
-    'HHPHC':
-    ['Horaire Heures Pleines Heures Creuses', 'A', 'mdi:counter']
+    "_UPTIME": ["Uptime", ATTR_SECONDS, "mdi:history"],
+    "ADCO": ["Adresse du compteur", "", "mdi:counter"],
+    "OPTARIF": ["Option tarifaire choisie", "", "mdi:mdi-timer-sand"],
+    "ISOUSC": ["Intensité souscrite", "A", "mdi:mdi-flash-outline"],
+    "BASE": ["Index option Base", ENERGY_WATT_HOUR, "mdi:gauge"],
+    "HCHC": ["Index option Heures Creuses", ENERGY_WATT_HOUR, "mdi:gauge"],
+    "HCHP": ["Index option Heures Pleines", ENERGY_WATT_HOUR, "mdi:gauge"],
+    "EJPHN": ["Index option Heures Normales", ENERGY_WATT_HOUR, "mdi:gauge"],
+    "EJPHPM": ["Index option Heures de Pointe Mobile", ENERGY_WATT_HOUR, "mdi:gauge"],
+    "BBRHCJB": [
+        "Index option Heures Creuses Jours Bleus",
+        ENERGY_WATT_HOUR,
+        "mdi:gauge",
+    ],
+    "BBRHPJB": [
+        "Index option Heures Pleines Jours Bleus",
+        ENERGY_WATT_HOUR,
+        "mdi:gauge",
+    ],
+    "BBRHCJW": [
+        "Index option Heures Creuses Jours Blancs",
+        ENERGY_WATT_HOUR,
+        "mdi:gauge",
+    ],
+    "BBRHPJW": [
+        "Index option Heures Pleines Jours Blancs",
+        ENERGY_WATT_HOUR,
+        "mdi:gauge",
+    ],
+    "BBRHCJR": [
+        "Index option Heures Creuses Jours Rouges",
+        ENERGY_WATT_HOUR,
+        "mdi:gauge",
+    ],
+    "BBRHPJR": [
+        "Index option Heures Pleines Jours Rouges",
+        ENERGY_WATT_HOUR,
+        "mdi:gauge",
+    ],
+    "PEJP": ["Préavis Début EJP (30 min)", "min", "mdi:counter"],
+    "PTEC": ["Période Tarifaire en cours", "", "mdi:chart-timeline"],
+    "DEMAIN": ["Couleur du lendemain ", "", "mdi:counter"],
+    "IINST": ["Intensité instantanée", "A", "mdi:flash"],
+    "ADPS": [
+        "Avertissement de Dépassement De Puissance Souscrite",
+        "A",
+        "mdi:mdi-flash-red-eye",
+    ],
+    "IMAX": ["Intensité maximale", "A", "mdi:mdi-flash-red-eye"],
+    "PAPP": ["Puissance apparente", "VA", "mdi:flash"],
+    "HHPHC": ["Horaire Heures Pleines Heures Creuses", "A", "mdi:counter"],
 }
 
-PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
-    vol.Required(CONF_RESOURCES, default=[]):
-        vol.All(cv.ensure_list, [vol.In(SENSOR_TYPES)]),
-})
+PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
+    {
+        vol.Required(CONF_RESOURCES, default=[]): vol.All(
+            cv.ensure_list, [vol.In(SENSOR_TYPES)]
+        )
+    }
+)
 
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
@@ -79,8 +90,8 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
         if sensor_type not in SENSOR_TYPES:
             _LOGGER.warning(
-                "Sensor type: %s does not appear in TeleInfo output",
-                sensor_type)
+                "Sensor type: %s does not appear in TeleInfo output", sensor_type
+            )
             return
 
         entities.append(RemoraTeleInfoSensor(hass.data[DOMAIN], sensor_type))
@@ -118,7 +129,7 @@ class RemoraTeleInfoSensor(Entity):
     def unit_of_measurement(self):
         """Return the unit of measurement of this entity, if any."""
         if not self._unit:
-            return ''
+            return ""
         return self._unit
 
     async def async_update(self):
