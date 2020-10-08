@@ -38,14 +38,16 @@ async def async_setup(hass, config):
     # It doesn't really matter why we're not able to get the status,
     # just that we can't.
     try:
-        await hass.async_add_executor_job(remora.updateTeleInfo)
+        await remora.async_updateTeleInfo()
+        await remora.async_updateAllFilPilote()
+        await remora.async_updateRelais()
         # must add keyword param no_throttle=True
     except Exception:  # pylint: disable=broad-except
         _LOGGER.exception("Failure while testing Remora TeleInfo retrieval.")
         return False
 
-    def async_reset(service):
-        hass.data[DOMAIN].reset()
+    async def async_reset(service):
+        await hass.data[DOMAIN].async_reset()
 
     hass.services.async_register(DOMAIN, SERVICE_RESET, async_reset, RESET_SCHEMA)
 
@@ -68,63 +70,59 @@ class RemoraDevice:
         self._filPiloteDic = None
         self._relais = None
 
-    def reset(self):
+    async def async_reset(self) -> bool:
         """Reset remora."""
-        self._remora.reset()
-        return True
+        return await self._remora.reset()
 
     @property
-    def TeleInfo(self):
-        """Get latest update if throttle allows. Return TeleInfo."""
-        self.updateTeleInfo()
+    def TeleInfo(self) -> dict:
+        """Return TeleInfo."""
         return self._teleInfo
 
-    def _get_TeleInfo(self):
+    async def async_get_TeleInfo(self) -> dict:
         """Get the status from Remora TeleInfo and return it as a dict."""
-        return self._remora.getTeleInfo()
+        return (await self._remora.getTeleInfo())
 
     @Throttle(MIN_TIME_BETWEEN_UPDATES_REMORA_SENSOR)
-    def updateTeleInfo(self, **kwargs):
+    async def async_updateTeleInfo(self, **kwargs) -> None:
         """Fetch the latest status from TeleInfo"""
-        self._teleInfo = self._get_TeleInfo()
+        self._teleInfo = await self.async_get_TeleInfo()
 
     @property
-    def FilPiloteDic(self):
-        """Get latest update if throttle allows. Return AllFilPilote."""
-        self.updateAllFilPilote()
+    def FilPiloteDic(self) -> dict:
+        """Return AllFilPilote."""
         return self._filPiloteDic
 
-    def _set_FilPilote(self, num, fpMode):
-        return self._remora.setFilPilote(num, fpMode)
+    async def async_set_FilPilote(self, num, fpMode) -> bool:
+        return (await self._remora.setFilPilote(num, fpMode))
 
-    def _get_AllFilPilote(self):
+    async def async_get_AllFilPilote(self) -> dict:
         """Get the status from Remora FilPilote and
         return it as a dict."""
-        return self._remora.getAllFilPilote()
+        return (await self._remora.getAllFilPilote())
 
     @Throttle(MIN_TIME_BETWEEN_UPDATES_REMORA_CLIMATE)
-    def updateAllFilPilote(self, **kwargs):
+    async def async_updateAllFilPilote(self, **kwargs) -> None:
         """Fetch the latest status for FilPilote"""
-        self._filPiloteDic = self._get_AllFilPilote()
+        self._filPiloteDic = await self.async_get_AllFilPilote()
 
     @property
-    def RelaisDic(self):
+    def RelaisDic(self) -> dict:
         """Get latest update if throttle allows.
            Return the current Mode Relais"""
-        self.updateRelais()
         return self._relais
 
-    def _set_ModeRelais(self, rMode):
-        return self._remora.setFnctRelais(rMode)
+    async def async_set_ModeRelais(self, rMode) -> bool:
+        return (await self._remora.setFnctRelais(rMode))
 
-    def _set_EtatRelais(self, rEtat):
-        return self._remora.setRelais(rEtat)
+    async def async_set_EtatRelais(self, rEtat) -> bool:
+        return (await self._remora.setRelais(rEtat))
 
-    def _get_Relais(self):
+    async def async_get_Relais(self) -> dict:
         """Get the status from Remora Relais"""
-        return self._remora.getRelais()
+        return (await self._remora.getRelais())
 
     @Throttle(MIN_TIME_BETWEEN_UPDATES_REMORA_CLIMATE)
-    def updateRelais(self, **kwargs):
+    async def async_updateRelais(self, **kwargs) -> None:
         """Fetch the latest status for Relais"""
-        self._relais = self._get_Relais()
+        self._relais = await self.async_get_Relais()

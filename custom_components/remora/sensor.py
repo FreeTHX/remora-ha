@@ -111,29 +111,30 @@ class RemoraTeleInfoSensor(Entity):
         self._state = None
 
     @property
-    def name(self):
+    def name(self) -> str:
         """Return the name of the Remora TeleInfo sensor."""
         return self._name
 
     @property
-    def icon(self):
+    def icon(self) -> str:
         """Icon to use in the frontend, if any."""
         return SENSOR_TYPES[self.type][2]
 
     @property
-    def state(self):
+    def state(self) -> bool:
         """Return true if the Remora is online, else False."""
         return self._state
 
     @property
-    def unit_of_measurement(self):
+    def unit_of_measurement(self) -> str:
         """Return the unit of measurement of this entity, if any."""
         if not self._unit:
             return ""
         return self._unit
 
-    async def async_update(self):
+    async def async_update(self) -> str:
         """Get the latest status and use it to update our sensor state."""
+        await self._remora.async_updateTeleInfo()
         if self.type.upper() not in self._remora.TeleInfo:
             self._state = None
         else:

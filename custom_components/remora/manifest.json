@@ -4,6 +4,7 @@
     "documentation": "https://www.home-assistant.io/components/remora",
     "dependencies": [],
     "codeowners": ["@FreeTHX"],
-    "requirements": ["pyremora"]
+    "requirements": ["pyremora>=0.3"],
+    "config_flow": false
   }
   
