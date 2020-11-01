@@ -8,7 +8,7 @@ import homeassistant.helpers.config_validation as cv
 from homeassistant.const import CONF_HOST, CONF_SENSORS
 from homeassistant.util import Throttle
 
-from .const import DATA_REMORA_HOST, DOMAIN, SERVICE_RESET
+from .const import DOMAIN, SERVICE_RESET
 
 _LOGGER = logging.getLogger(__name__)
 MIN_TIME_BETWEEN_UPDATES_REMORA_SENSOR = timedelta(seconds=5)
@@ -28,9 +28,6 @@ async def async_setup(hass, config):
         return True
 
     conf = config[DOMAIN]
-
-    # Store config to be used during entry setup
-    # hass.data[DATA_REMORA_HOST] = conf[CONF_HOST]
 
     host = conf[CONF_HOST]
     remora = RemoraDevice(host)
