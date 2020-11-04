@@ -5,6 +5,7 @@ from homeassistant.util import Throttle
 MIN_TIME_BETWEEN_UPDATES_REMORA_SENSOR = timedelta(seconds=5)
 MIN_TIME_BETWEEN_UPDATES_REMORA_CLIMATE = timedelta(seconds=2)
 
+
 class RemoraDevice:
     """Stores the data retrieved from Remora.
     For each entity to use, acts as the single point responsible for fetching
@@ -32,7 +33,7 @@ class RemoraDevice:
 
     async def async_get_TeleInfo(self) -> dict:
         """Get the status from Remora TeleInfo and return it as a dict."""
-        return (await self._remora.getTeleInfo())
+        return await self._remora.getTeleInfo()
 
     @Throttle(MIN_TIME_BETWEEN_UPDATES_REMORA_SENSOR)
     async def async_updateTeleInfo(self, **kwargs) -> None:
@@ -45,12 +46,12 @@ class RemoraDevice:
         return self._filPiloteDic
 
     async def async_set_FilPilote(self, num, fpMode) -> bool:
-        return (await self._remora.setFilPilote(num, fpMode))
+        return await self._remora.setFilPilote(num, fpMode)
 
     async def async_get_AllFilPilote(self) -> dict:
         """Get the status from Remora FilPilote and
         return it as a dict."""
-        return (await self._remora.getAllFilPilote())
+        return await self._remora.getAllFilPilote()
 
     @Throttle(MIN_TIME_BETWEEN_UPDATES_REMORA_CLIMATE)
     async def async_updateAllFilPilote(self, **kwargs) -> None:
@@ -60,18 +61,18 @@ class RemoraDevice:
     @property
     def RelaisDic(self) -> dict:
         """Get latest update if throttle allows.
-           Return the current Mode Relais"""
+        Return the current Mode Relais"""
         return self._relais
 
     async def async_set_ModeRelais(self, rMode) -> bool:
-        return (await self._remora.setFnctRelais(rMode))
+        return await self._remora.setFnctRelais(rMode)
 
     async def async_set_EtatRelais(self, rEtat) -> bool:
-        return (await self._remora.setRelais(rEtat))
+        return await self._remora.setRelais(rEtat)
 
     async def async_get_Relais(self) -> dict:
         """Get the status from Remora Relais"""
-        return (await self._remora.getRelais())
+        return await self._remora.getRelais()
 
     @Throttle(MIN_TIME_BETWEEN_UPDATES_REMORA_CLIMATE)
     async def async_updateRelais(self, **kwargs) -> None:
