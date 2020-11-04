@@ -1,12 +1,12 @@
 """Support for the Remora devices."""
 import logging
-
 import voluptuous as vol
 
 import homeassistant.helpers.config_validation as cv
 from homeassistant.const import CONF_HOST, CONF_SENSORS
-from .remora import RemoraDevice
+
 from .const import DOMAIN, SERVICE_RESET
+from .remora import RemoraDevice
 
 _LOGGER = logging.getLogger(__name__)
 

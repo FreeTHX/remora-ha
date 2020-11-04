@@ -1,4 +1,5 @@
 from datetime import timedelta
+
 from homeassistant.util import Throttle
 
 MIN_TIME_BETWEEN_UPDATES_REMORA_SENSOR = timedelta(seconds=5)
