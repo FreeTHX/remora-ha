@@ -134,7 +134,10 @@ class RemoraTeleInfoSensor(Entity):
     async def async_update(self) -> str:
         """Get the latest status and use it to update our sensor state."""
         await self._remora.async_updateTeleInfo()
-        if self.type.upper() not in self._remora.TeleInfo:
+        if (
+            self._remora.TeleInfo is None
+            or self.type.upper() not in self._remora.TeleInfo
+        ):
             self._state = None
         else:
             self._state = self._remora.TeleInfo[self.type.upper()]
