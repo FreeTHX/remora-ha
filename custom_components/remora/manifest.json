@@ -3,6 +3,7 @@
     "name": "Remora - Gestionnaire Fil Pilot",
     "documentation": "https://www.home-assistant.io/components/remora",
     "dependencies": [],
+    "version": "0.3",
     "codeowners": ["@FreeTHX"],
     "requirements": ["pyremora>=0.3"],
     "config_flow": false
