@@ -3,7 +3,7 @@ import logging
 import voluptuous as vol
 
 import homeassistant.helpers.config_validation as cv
-from homeassistant.const import CONF_HOST, CONF_SENSORS
+from homeassistant.const import CONF_HOST
 
 from .const import DOMAIN, SERVICE_RESET
 from .remora import RemoraDevice
