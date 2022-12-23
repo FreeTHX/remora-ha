@@ -12,7 +12,7 @@ The main objective is to include it into [Home Assistant](https://www.home-assis
 
 Link: https://github.com/FreeTHX/pyremora
 
-## Remora in Home Assistant
+### Remora in Home Assistant
 This component provides:
 - ```sensor``` over TeleInfo  
 A sensor for each ***TeleInfo*** header can be configured to fetch ***TeleInfo*** value.  
@@ -68,5 +68,13 @@ climate:
     relais: True
 ```
 
-## Demo
-![Remora in HA](https://user-images.githubusercontent.com/16355105/62412432-ec6fb380-b5f1-11e9-814e-5531982f9b72.png)
+### Demo
+![Example](https://user-images.githubusercontent.com/16355105/209246279-c3783768-7a41-495d-bedc-c5fcc68ca5c5.png)
+
+
+### Energy Integration
+You can add sensors like **BASE**, **HCHC**, **HCHP** or others **Index** on the Energy Dashboard.  
+![Add Index to Energy Dashboard](https://user-images.githubusercontent.com/16355105/209245053-dfb6d78a-b246-46bf-8f89-b68840e11f78.png)  
+  
+This will give you the following energy consuption chart.  
+![Energy Chart](https://user-images.githubusercontent.com/16355105/209245317-1ecf4e18-1a4d-48e8-99ae-317d921359b6.png)
