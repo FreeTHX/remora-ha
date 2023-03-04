@@ -32,9 +32,15 @@ async def async_setup(hass, config) -> bool:
     # It doesn't really matter why we're not able to get the status,
     # just that we can't.
     try:
-        await remora.async_updateTeleInfo()
+        is_ok = await remora.async_check_HeartBeat()
+        if not is_ok:
+            _LOGGER.error("Failure while testing Remora device. HeartBeat != 200 OK")
+            return False    
+        # Load mandatory elments for remora
         await remora.async_updateAllFilPilote()
         await remora.async_updateRelais()
+        # Load optional elements for remora (ie TeleInfo)
+        await remora.async_updateTeleInfo()
         # must add keyword param no_throttle=True
     except Exception:  # pylint: disable=broad-except
         _LOGGER.exception("Failure while testing Remora device.")

@@ -26,9 +26,14 @@ class RemoraDevice:
         """Reset remora."""
         return await self._remora.reset()
 
+    async def async_check_HeartBeat(self) -> bool:
+        """Get the status from Remora."""
+        return await self._remora.getHeartBeat()
+    
     @property
     def TeleInfo(self) -> dict:
         """Return TeleInfo."""
+        """TeleInfo can be None (if the module is not enabled)"""
         return self._teleInfo
 
     async def async_get_TeleInfo(self) -> dict:
