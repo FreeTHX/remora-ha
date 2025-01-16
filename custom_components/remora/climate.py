@@ -4,11 +4,8 @@ import voluptuous as vol
 import homeassistant.helpers.config_validation as cv
 from homeassistant.components.climate import PLATFORM_SCHEMA, ClimateEntity
 from homeassistant.components.climate.const import (
-    HVAC_MODE_COOL,
-    HVAC_MODE_HEAT,
-    HVAC_MODE_HEAT_COOL,
-    HVAC_MODE_OFF,
-    SUPPORT_PRESET_MODE,
+    HVACMode,
+    ClimateEntityFeature
 )
 from homeassistant.const import CONF_NAME, TEMP_CELSIUS
 from homeassistant.core import callback
@@ -21,15 +18,15 @@ from .const import CONF_TEMP_SENSOR, DOMAIN, FILPILOTE, FNCT_RELAIS, FP, RELAIS
 _LOGGER = logging.getLogger(__name__)
 
 REMORA_FP_PRESET_MODES_TO_HVAC_MODE = {
-    remora.FpMode.Arrêt.name: HVAC_MODE_OFF,
-    remora.FpMode.HorsGel.name: HVAC_MODE_COOL,
-    remora.FpMode.Eco.name: HVAC_MODE_HEAT_COOL,
-    remora.FpMode.Confort.name: HVAC_MODE_HEAT,
+    remora.FpMode.Arrêt.name: HVACMode.OFF,
+    remora.FpMode.HorsGel.name: HVACMode.COOL,
+    remora.FpMode.Eco.name: HVACMode.HEAT_COOL,
+    remora.FpMode.Confort.name: HVACMode.HEAT,
 }
 
 REMORA_RELAIS_ETAT_TO_HVAC_MODE = {
-    remora.RelaisEtat.Ouvert.name: HVAC_MODE_OFF,
-    remora.RelaisEtat.Fermé.name: HVAC_MODE_HEAT,
+    remora.RelaisEtat.Ouvert.name: HVACMode.OFF,
+    remora.RelaisEtat.Fermé.name: HVACMode.HEAT,
 }
 
 FP_CONFIG_SCHEMA = vol.Schema(
@@ -154,7 +151,7 @@ class RemoraFilPiloteClimate(ClimateEntity):
     @property
     def supported_features(self) -> int:
         """Return the list of supported features."""
-        return SUPPORT_PRESET_MODE
+        return ClimateEntityFeature.PRESET_MODE
 
     async def async_set_hvac_mode(self, hvac_mode) -> None:
         """Set new target hvac mode."""
@@ -221,7 +218,7 @@ class RemoraRelaisClimate(ClimateEntity):
     @property
     def supported_features(self) -> int:
         """Return the list of supported features."""
-        return SUPPORT_PRESET_MODE
+        return ClimateEntityFeature.PRESET_MODE
 
     async def async_set_hvac_mode(self, hvac_mode) -> None:
         eMode = [
