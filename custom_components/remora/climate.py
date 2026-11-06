@@ -7,9 +7,9 @@ from homeassistant.components.climate.const import (
     HVACMode,
     ClimateEntityFeature
 )
-from homeassistant.const import CONF_NAME, TEMP_CELSIUS
+from homeassistant.const import CONF_NAME, UnitOfTemperature
 from homeassistant.core import callback
-from homeassistant.helpers.event import async_track_state_change
+from homeassistant.helpers.event import async_track_state_change_event
 
 import remora
 
@@ -89,11 +89,14 @@ class RemoraFilPiloteClimate(ClimateEntity):
             if current_temp_state is not None:
                 self._async_update_temp(current_temp_state)
             # Record a State Changed Listener
-            async_track_state_change(
-                self.hass, self._temp_sensor_id, self._async_sensor_changed
+            self.async_on_remove(
+                async_track_state_change_event(
+                    self.hass, [self._temp_sensor_id], self._async_sensor_changed
+                )
             )
 
-    async def _async_sensor_changed(self, entity_id, old_state, new_state) -> None:
+    async def _async_sensor_changed(self, event) -> None:
+        new_state = event.data.get("new_state")
         if new_state is None:
             return
         self._async_update_temp(new_state)
@@ -146,7 +149,7 @@ class RemoraFilPiloteClimate(ClimateEntity):
     @property
     def temperature_unit(self) -> str:
         """Return the unit of measurement."""
-        return TEMP_CELSIUS
+        return UnitOfTemperature.CELSIUS
 
     @property
     def supported_features(self) -> int:
@@ -213,7 +216,7 @@ class RemoraRelaisClimate(ClimateEntity):
     @property
     def temperature_unit(self) -> str:
         """Return the unit of measurement."""
-        return TEMP_CELSIUS
+        return UnitOfTemperature.CELSIUS
 
     @property
     def supported_features(self) -> int:
