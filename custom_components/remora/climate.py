@@ -122,7 +122,7 @@ class RemoraFilPiloteClimate(ClimateEntity):
         return CLIMATE_PREFIX + self._name
 
     @property
-    def current_temperature(self) -> float:
+    def native_current_temperature(self) -> float:
         """Return the sensor temperature."""
         return self._cur_temp
 
@@ -147,7 +147,7 @@ class RemoraFilPiloteClimate(ClimateEntity):
         return list(REMORA_FP_PRESET_MODES_TO_HVAC_MODE.keys())
 
     @property
-    def temperature_unit(self) -> str:
+    def native_temperature_unit(self) -> str:
         """Return the unit of measurement."""
         return UnitOfTemperature.CELSIUS
 
@@ -214,7 +214,7 @@ class RemoraRelaisClimate(ClimateEntity):
         )
 
     @property
-    def temperature_unit(self) -> str:
+    def native_temperature_unit(self) -> str:
         """Return the unit of measurement."""
         return UnitOfTemperature.CELSIUS
 
